@@ -1,0 +1,8 @@
+Flask
+python-dotenv
+google-genai
+pdfplumber
+Pillow
+pytesseract
+pdf2image
+gunicorn

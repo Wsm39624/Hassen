@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>منصة حَصِين للامتثال البنكي الذكي | Hassen Compliance</title>
+    
+    <!-- استدعاء Tailwind CSS للتصميم الاحترافي -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body class="bg-[#F4F6F9] min-h-screen flex flex-col justify-between antialiased overflow-x-hidden">
+
+    <!-- 🛡️ [HEADER] - شريط حَصِين العلوي الموزون والمطابق للتصميم الجديد -->
+    <header class="bg-[#002855] text-white shadow-md border-b-[3px] border-[#0084C2] sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 py-2 flex flex-col sm:flex-row justify-between items-center gap-4">
+            
+            <!-- أزرار التبديل الديناميكي بين الشاشات (يسار الهيدر) -->
+            <div class="flex items-center bg-[#001D3D] p-1 rounded-lg border border-slate-700 shadow-inner order-2 sm:order-1">
+                <button onclick="switchView('entrepreneur')" id="viewBtn-user" class="px-4 py-1.5 rounded-md text-xs font-bold bg-[#0084C2] text-white transition-all shadow-sm">
+                    👤 شاشة العمليات للعميل
+                </button>
+                <button onclick="switchView('bank')" id="viewBtn-bank" class="px-4 py-1.5 rounded-md text-xs font-bold text-gray-400 hover:text-white transition-all">
+                    🏢 لوحة مدير امتثال البنك
+                </button>
+            </div>
+
+            <!-- هوية المنصة واللوجو الرسمي (يمين الهيدر) -->
+            <div class="flex items-center space-x-3 space-x-reverse order-1 sm:order-2">
+                <div class="flex flex-col text-right">
+                    <div class="flex items-center space-x-2 space-x-reverse">
+                        <span class="text-lg font-black tracking-wider text-white">حَصِين | Hassen Compliance</span>
+                        <span class="text-[9px] bg-emerald-600 text-white px-1.5 py-0.5 rounded font-bold animate-pulse">موظف امتثال ذكي</span>
+                    </div>
+                    <span class="text-[10px] text-[#0084C2] font-bold tracking-tight">AI-Powered Financial Compliance & anti-concealment Officer</span>
+                </div>
+                <img src="{{ url_for('static', filename='logo.png') }}" alt="Hassen Logo" class="h-10 w-auto bg-white p-1 rounded-md shadow-sm">
+            </div>
+
+        </div>
+    </header>
+
+    <!-- ⚠️ [BANNER] - تنبيه البيانات التجريبية ممتد ومتناسق بملء الحاوية -->
+    <div class="max-w-7xl mx-auto w-full mt-4 px-4 sm:px-6">
+        <div class="bg-amber-50 border-r-4 border-amber-500 p-3 rounded-lg shadow-sm">
+            <p class="text-[11px] text-amber-800 font-bold leading-relaxed flex items-center">
+                📌 تنبيه تجريبي: منصة حصين تعمل كخط دفاع أول للتحقق الاستباقي ومكافحة التستر المالي والتزوير لشركة الشراع المحدودة ورائد الأعمال وسام محمد عبر دمج تقنيات الـ AI والـ OCR والبلوكتشين.
+            </p>
+        </div>
+    </div>
+
+    <!-- 💻 [BODY] - مساحة العمل الرئيسية الموزونة بنظام الشبكة (Grid) متوازي الأبعاد -->
+    <main class="flex-grow max-w-7xl mx-auto w-full p-4 sm:px-6 sm:py-6">
+        
+        <!-- الشاشة الأولى: شاشة رفع وفحص المستندات للعميل -->
+        <div id="entrepreneurView" class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+            
+            <!-- العمود الأيمن (فحص المستندات والتدقيق المتقاطع): يستحوذ على المساحة الأكبر -->
+            <section class="lg:col-span-8 bg-white p-6 rounded-xl shadow-sm border-t-4 border-[#002855] flex flex-col justify-between min-h-[500px]">
+                <div>
+                    <h3 class="text-lg font-bold text-[#002855] mb-2 flex items-center gap-2">
+                        📄 فحص المستندات والتدقيق المتقاطع للامتثال
+                    </h3>
+                    <p class="text-xs text-gray-400 mb-6">يرجى تحديد نوع المستند، ثم رفعه لتشغيل التدقيق الفوري ومكافحة التناقضات ومؤشرات التستر المالي:</p>
+                    
+                    <!-- 1. تحديد نوع المستند المالي المرفوع -->
+                    <div class="mb-6">
+                        <label class="block text-xs font-bold text-gray-700 mb-3">1. حدد نوع المستند المالي المرفوع:</label>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <label class="flex items-center justify-between cursor-pointer bg-slate-50 hover:bg-slate-100 p-3 rounded-lg border border-slate-200 transition-all">
+                                <span class="text-xs font-bold text-slate-700">📄 فاتورة ضريبية (ZATCA)</span>
+                                <input type="radio" name="docType" value="invoice" checked class="text-[#002855] focus:ring-[#002855] h-4 w-4">
+                            </label>
+                            <label class="flex items-center justify-between cursor-pointer bg-slate-50 hover:bg-slate-100 p-3 rounded-lg border border-slate-200 transition-all">
+                                <span class="text-xs font-bold text-slate-700">💸 طلب تحويل مالي دولي (SAMA)</span>
+                                <input type="radio" name="docType" value="transfer" class="text-[#002855] focus:ring-[#002855] h-4 w-4">
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- 2. صندوق سحب وإفلات المستند المالي المخصص -->
+                    <div class="mb-6">
+                        <label class="block text-xs font-bold text-gray-700 mb-3">2. ارفع ملف المستند المالي المخصص:</label>
+                        <div id="dropZone" class="border-2 border-dashed border-gray-200 hover:border-[#002855] rounded-xl p-10 text-center transition-all cursor-pointer bg-slate-50 flex flex-col items-center justify-center min-h-[180px]">
+                            <span class="block text-4xl mb-3">📥</span>
+                            <p class="text-sm font-bold text-gray-600" id="uploadPrompt">اسحب المستند المالي إلى هنا أو انقر لتصفح الملفات</p>
+                            <p class="text-[11px] text-gray-400 mt-1">يدعم صيغ المحاكاة الإلكترونية والملفات المباشرة</p>
+                            <input type="file" id="fileInput" class="hidden" accept=".pdf, .png, .jpg, .jpeg">
+                        </div>
+                    </div>
+
+                    <!-- معلومات ومستند التدقيق الجاهز للفحص -->
+                    <div id="fileInfoBox" class="hidden mt-4 p-3 bg-[#EBF5FF] text-[#002855] rounded-lg text-xs font-bold flex justify-between items-center shadow-sm">
+                        <span id="fileNameDisplay">اسم الملف.pdf</span>
+                        <span class="text-[10px] bg-[#0084C2] text-white px-2 py-0.5 rounded shadow-sm">مستعد للتدقيق</span>
+                    </div>
+
+                    <!-- زر بدء الفحص والتدقيق الذكي لحصين -->
+                    <div class="mt-6">
+                        <button id="analyzeBtn" class="w-full bg-[#002855] hover:bg-[#001D3D] text-white font-bold py-3.5 px-4 rounded-lg transition-all shadow-md flex justify-center items-center gap-2 opacity-50 cursor-not-allowed" disabled>
+                            <span>🔍 ابدأ الفحص والتدقيق الذكي لحصين</span>
+                        </button>
+                    </div>
+
+                    <!-- [شاشة عرض النتائج والمطابقة] تظهر تلقائياً بعد استدعاء المحرك -->
+                    <div id="resultSection" class="hidden mt-8 border-t border-gray-200 pt-6">
+                        
+                        <!-- طبقة التحقق المزدوج ومؤشر ثقة الـ OCR البصرية -->
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4 p-4 bg-slate-50 rounded-xl border border-slate-200 shadow-sm">
+                            <div class="flex flex-col justify-center">
+                                <span class="block text-xs font-bold text-gray-500 mb-1.5">🤖 مؤشر ثقة قراءة الـ OCR لمتن النص:</span>
+                                <div class="flex items-center space-x-2 space-x-reverse">
+                                    <div class="w-full bg-gray-200 rounded-full h-2.5">
+                                        <div id="ocrConfidenceBar" class="h-2.5 rounded-full" style="width: 0%"></div>
+                                    </div>
+                                    <span id="ocrConfidenceValue" class="text-xs font-black text-[#002855]">0%</span>
+                                </div>
+                            </div>
+                            <div id="humanFallbackAlert" class="hidden flex items-center bg-amber-50 p-3 rounded-lg border border-amber-200 text-[10px] text-amber-900 font-bold leading-tight">
+                                ⚠️ تنبيه الامتثال المزدوج: درجة الثقة دون 95%! تم توجيه المعاملة تلقائياً للمراجعة البشرية. السبب: <span id="fallbackReasonText" class="mr-1 underline"></span>
+                            </div>
+                        </div>
+
+                        <!-- بصمة التوثيق الرقمية للبلوكتشين (Immutable Hash) -->
+                        <div class="mb-4 p-3 bg-slate-900 text-emerald-400 rounded-lg text-xs font-mono flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 shadow-inner">
+                            <span class="text-gray-400 font-sans font-bold">⛓️ بصمة التوثيق الرقمية للبلوكتشين (Immutable Hash):</span>
+                            <span id="blockchainHashDisplay" class="font-bold tracking-wider break-all text-[11px]">0x000...</span>
+                        </div>
+
+                        <div class="flex items-center justify-between mb-4">
+                            <h4 class="text-sm font-bold text-[#002855]">📊 نتيجة فحص الامتثال الكلية:</h4>
+                            <span id="complianceBadge" class="px-3 py-1 rounded-full text-xs font-bold text-white shadow-sm"></span>
+                        </div>
+
+                        <div id="reportBox" class="p-4 rounded-lg mb-6 text-xs font-medium shadow-sm"></div>
+
+                        <!-- حقول الـ OCR المفتوحة للتعديل لضمان معايير الـ Human-in-the-loop -->
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
+                            <div>
+                                <label class="block text-xs font-bold text-gray-500 mb-1">الرقم الضريبي المستخرج (VAT ID) - قابل للتعديل يدوياً</label>
+                                <input type="text" id="vatNoField" class="w-full p-2 border border-gray-300 rounded-md bg-white text-sm font-mono font-bold text-[#002855] focus:outline-none focus:ring-2 focus:ring-[#0084C2]">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-gray-500 mb-1">نسبة ضريبة القيمة المضافة للبند (%) - قابلة للتعديل يدوياً</label>
+                                <input type="text" id="vatRateField" class="w-full p-2 border border-gray-300 rounded-md bg-white text-sm font-bold text-[#002855] focus:outline-none focus:ring-2 focus:ring-[#0084C2]">
+                            </div>
+                        </div>
+
+                        <!-- تبويبات الفحص الفني للخصوصية واللوائح السيادية -->
+                        <div class="border-b border-gray-200 flex space-x-4 space-x-reverse mb-4 text-xs font-bold">
+                            <button onclick="switchTab('systems')" id="tabBtn-systems" class="py-2 border-b-2 border-[#002855] text-[#002855] focus:outline-none">🏢 فحص الأنظمة واللوائح</button>
+                            <button onclick="switchTab('privacy')" id="tabBtn-privacy" class="py-2 text-gray-400 focus:outline-none">🔒 تعمية البيانات (SDAIA)</button>
+                        </div>
+
+                        <div id="tabContent-systems" class="space-y-2 text-xs text-gray-700">
+                            <p><strong>البنك المركزي السعودي (SAMA):</strong> <span id="samaStatus" class="font-bold"></span></p>
+                            <p><strong>توقيت الفحص والمزامنة الموثق شبكياً:</strong> <span id="samaTime" class="text-gray-500"></span></p>
+                            <p><strong>مطابقة هيئة الزكاة والجمارك (ZATCA):</strong> <span id="zatcaMessage" class="font-bold"></span></p>
+                            <p><strong>فحص الـ QR Code الأمني:</strong> <span id="qrMessage" class="font-bold"></span></p>
+                        </div>
+
+                        <div id="tabContent-privacy" class="hidden text-xs text-gray-700">
+                            <p class="text-gray-500 mb-2 leading-relaxed">تطبيقاً لنظام حماية البيانات الشخصية (PDPL)، قام حصين بحجب البيانات وإرسال النص الآمن التالي لـ Gemini للتحليل:</p>
+                            <pre id="maskedText" class="bg-slate-50 p-3 rounded border border-slate-200 text-[10px] font-mono text-slate-600 overflow-x-auto whitespace-pre-wrap text-right shadow-inner max-h-48 overflow-y-auto"></pre>
+                        </div>
+
+                        <div id="correctionArea" class="hidden mt-6">
+                            <button onclick="applyInstantCorrection()" class="w-full bg-[#FF9E1B] hover:bg-[#E08510] text-black font-extrabold py-3 px-4 rounded-lg transition-all shadow-md">
+                                ✨ تصحيح الأخطاء التشريعية تلقائياً (Instant Correction)
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- العمود الأيسر (محددات أمن الامتثال والروابط): متطابق ومتوازي الارتفاع والوزن -->
+            <section class="lg:col-span-4 bg-white p-6 rounded-xl shadow-sm border-t-4 border-[#0084C2] h-full flex flex-col justify-start">
+                <h3 class="text-lg font-bold text-[#002855] mb-4 flex items-center gap-2">
+                    🛡️ محددات أمن الامتثال
+                </h3>
+                <p class="text-xs text-gray-400 mb-6 leading-relaxed">بوابة المطابقة المباشرة والتحقق الفوري مع اللوائح والتعاميم السيادية المعتمدة بالمملكة بضغطة زر واحدة:</p>
+                
+                <div class="space-y-4">
+                    <div class="p-3 bg-slate-50 rounded-lg border border-slate-200 shadow-sm transition-all hover:shadow-md">
+                        <div class="flex justify-between items-center mb-1">
+                            <span class="text-xs font-bold text-[#002855]">قواعد وتعميمات SAMA</span>
+                            <span class="px-2 py-0.5 text-[9px] font-bold text-emerald-700 bg-emerald-50 rounded">نشط ✅</span>
+                        </div>
+                        <a href="https://www.sama.gov.sa/ar-sa/RulesInstructions" target="_blank" class="inline-block text-[11px] text-[#0084C2] font-bold hover:underline mt-1">🔗 مركز الأنظمة والتعليمات والأمن السيبراني &larr;</a>
+                    </div>
+                    <div class="p-3 bg-slate-50 rounded-lg border border-slate-200 shadow-sm transition-all hover:shadow-md">
+                        <div class="flex justify-between items-center mb-1">
+                            <span class="text-xs font-bold text-[#002855]">الفوترة الإلكترونية ZATCA</span>
+                            <span class="px-2 py-0.5 text-[9px] font-bold text-emerald-700 bg-emerald-50 rounded">مفعل ✅</span>
+                        </div>
+                        <a href="https://zatca.gov.sa/ar/ElectronicInvoicing" target="_blank" class="inline-block text-[11px] text-[#0084C2] font-bold hover:underline mt-1">🔗 بوابة الفوترة الإلكترونية (فاتورة) &larr;</a>
+                    </div>
+                    <div class="p-3 bg-slate-50 rounded-lg border border-slate-200 shadow-sm transition-all hover:shadow-md">
+                        <div class="flex justify-between items-center mb-1">
+                            <span class="text-xs font-bold text-[#002855]">تعمية الهوية الرقمية PDPL</span>
+                            <span class="px-2 py-0.5 text-[9px] font-bold text-emerald-700 bg-emerald-50 rounded">توطين كامل 🔒</span>
+                        </div>
+                        <a href="https://ndmo.gov.sa" target="_blank" class="inline-flex items-center text-[11px] text-[#0084C2] font-bold hover:underline mt-1">🔗 مكتب إدارة البيانات الوطنية (سدايا) &larr;</a>
+                    </div>
+                </div>
+            </section>
+
+        </div>
+
+        <!-- الشاشة الثانية (مخفية وتنشط عند التبديل): لوحة تحكم أقسام الامتثال والمراجعة بالبنك -->
+        <div id="bankComplianceView" class="hidden bg-white p-6 rounded-xl shadow-sm border-t-4 border-[#002855] flex flex-col">
+            <h3 class="text-xl font-bold text-[#002855] mb-2">🏢 لوحة رقابة وتحليل الامتثال لمدير البنك (Compliance Dashboard)</h3>
+            <p class="text-xs text-gray-500 mb-6">إحصائيات فورية وتحليلات ذكية ترصد كفاءة عمليات الامتثال وأكثر الأخطاء والمخالفات شيوعاً التي يقع فيها العملاء لمساعدتكم في تحسين التوجيه:</p>
+            
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+                <div class="p-4 bg-slate-50 rounded-xl border border-slate-200 shadow-sm"><span class="block text-xs font-bold text-gray-400">إجمالي المستندات المفحوصة حياً</span><span class="text-xl font-black text-[#002855] block mt-1">1,245 مستند</span></div>
+                <div class="p-4 bg-slate-50 rounded-xl border border-slate-200 shadow-sm"><span class="block text-xs font-bold text-gray-400">مخالفات تم رصدها وإصلاحها تلقائياً</span><span class="text-xl font-black text-amber-600 block mt-1">142 مخالفة (85%)</span></div>
+                <div class="p-4 bg-slate-50 rounded-xl border border-slate-200 shadow-sm"><span class="block text-xs font-bold text-gray-400">متوسط وقت التحقق والتحصين بالـ AI</span><span class="text-xl font-black text-emerald-600 block mt-1">1.8 ثانية (-92% وقت)</span></div>
+                <div class="p-4 bg-slate-50 rounded-xl border border-slate-200 shadow-sm"><span class="block text-xs font-bold text-gray-400">نسبة دقة المطابقة والقواعد الحتمية</span><span class="text-xl font-black text-[#0084C2] block mt-1">99.4%</span></div>
+            </div>
+
+            <h4 class="text-md font-bold text-[#002855] mb-3">🚨 الأخطاء التشريعية الأكثر شيوعاً بين منشآت العملاء حالياً (Top Errors):</h4>
+            <div class="overflow-x-auto rounded-lg border border-gray-200 shadow-sm">
+                <table class="w-full text-right text-xs">
+                    <thead>
+                        <tr class="bg-slate-100 text-[#002855] font-bold"><th class="p-3 border-b">نوع المخالفة المرصودة بالذكاء الاصطناعي</th><th class="p-3 border-b">الجهة المشرّعة</th><th class="p-3 border-b">تكرار المخالفة</th><th class="p-3 border-b">مستوى الخطورة البنكية</th><th class="p-3 border-b">الإجراء المتخذ من حصين</th></tr>
+                    </thead>
+                    <tbody class="text-gray-700 divide-y divide-gray-200 bg-white">
+                        <tr><td class="p-3 border-b">تطبيق ضريبة القيمة المضافة 0% على أجهزة إلكترونية (لابتوب)</td><td class="p-3 border-b">هيئة الزكاة (ZATCA)</td><td class="p-3 border-b">42 مرة هذا الشهر</td><td class="p-3 border-b text-amber-600 font-bold">متوسطة الخطورة</td><td class="p-3 border-b">تفعيل زر التصحيح التلقائي الفوري بالحقول</td></tr>
+                        <tr><td class="p-3 border-b">الرقم الضريبي للمورد ناقص أو لا يبدأ وينتهي بالرقم 3</td><td class="p-3 border-b">هيئة الزكاة (ZATCA)</td><td class="p-3 border-b">35 مرة هذا الشهر</td><td class="p-3 border-b text-red-600 font-bold">حرج (شبهة تلاعب)</td><td class="p-3 border-b">تعليق وتجميد المعاملة لحين التصحيح البشري</td></tr>
+                        <tr><td class="p-3 border-b">تجاوز طلب التحويل الدولي 100,000 ريال دون إرفاق الفاتورة الداعمة</td><td class="p-3 border-b">البنك المركزي (SAMA)</td><td class="p-3 border-b">28 مرة هذا الشهر</td><td class="p-3 border-b text-red-600 font-bold">حرج (مخالفة غسيل أموال)</td><td class="p-3 border-b">حظر زر الإرسال الترحيلي وإجبار العميل على الإرفاق</td></tr>
+                        <tr><td class="p-3 border-b">عدم كتابة غرض التحويل الدولي إجبارياً في الحقول النموذجية</td><td class="p-3 border-b">البنك المركزي (SAMA)</td><td class="p-3 border-b">21 مرة هذا الشهر</td><td class="p-3 border-b text-gray-500 font-bold">منخفضة الخطورة</td><td class="p-3 border-b">ملء الحقل تلقائياً عبر سياق نصوص الفاتورة الـ AI</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- 🖥️ [FOOTER] - شاشة الكونسول وبث العمليات الموزونة والمستقرة تماماً في ذيل الصفحة -->
+    <footer class="bg-[#111827] text-[#10B981] p-4 font-mono text-xs border-t-2 border-slate-800 shrink-0">
+        <div class="max-w-7xl mx-auto w-full">
+            <div class="flex justify-between items-center border-b border-slate-800 pb-2 mb-2">
+                <span class="font-bold text-gray-400">🖥️ Cortical Live Stream - كونسول حصين الذكي ومطابقة قواعد SAMA لمكافحة التستر:</span>
+                <span class="text-[10px] bg-[#10B981] text-black px-1.5 py-0.5 rounded font-bold tracking-tight shadow-sm">LIVE STREAMING</span>
+            </div>
+            <div id="consoleLog" class="space-y-1 h-24 overflow-y-auto leading-relaxed text-right scrollbar-thin scrollbar-thumb-slate-700">
+                <p class="text-gray-500">&gt;_ بانتظار تحميل المستند المالي لبدء تفعيل محرك التدقيق ومكافحة التستر والامتثال...</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- استدعاء ملف الجافا سكريبت الخارجي -->
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>
