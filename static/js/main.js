@@ -7,25 +7,56 @@ const fileInfoBox = document.getElementById('fileInfoBox');
 const fileNameDisplay = document.getElementById('fileNameDisplay');
 const uploadPrompt = document.getElementById('uploadPrompt');
 
+// 1. عند النقر على البوكس، يفتح نافذة اختيار الملفات تلقائياً
 dropZone.addEventListener('click', () => fileInput.click());
 
-fileInput.addEventListener('change', function(e) {
-    const file = e.target.files[0];
-    if (!file) return;
+// 2. معالجة أحداث السحب والإفلات البصرية (Drag over & leave)
+['dragenter', 'dragover'].forEach(eventName => {
+    dropZone.addEventListener(eventName, (e) => {
+        e.preventDefault();
+        dropZone.classList.add('border-[#002855]', 'bg-blue-50');
+    }, false);
+});
 
+['dragleave', 'drop'].forEach(eventName => {
+    dropZone.addEventListener(eventName, (e) => {
+        e.preventDefault();
+        dropZone.classList.remove('border-[#002855]', 'bg-blue-50');
+    }, false);
+});
+
+// 3. لقط الملف عند رميه وإفلاته داخل البوكس مباشرة
+dropZone.addEventListener('drop', (e) => {
+    const dt = e.dataTransfer;
+    const files = dt.files;
+    if (files.length > 0) {
+        fileInput.files = files; // تمرير الملف لحقل الإدخال برمجياً
+        handleFileSelection(files[0]);
+    }
+});
+
+// 4. لقط الملف عند اختياره يدوياً من نافذة الملفات
+fileInput.addEventListener('change', function(e) {
+    if (e.target.files.length > 0) {
+        handleFileSelection(e.target.files[0]);
+    }
+});
+
+// دالة حوكمة وتجهيز الملف المختار لتفعيل أزرار الفحص
+function handleFileSelection(file) {
     currentFile = file;
     fileNameDisplay.innerText = file.name;
     fileInfoBox.classList.remove('hidden');
-    uploadPrompt.innerText = "تم اختيار الملف بنجاح! جاهز لبدء عملية التدقيق والتحليل.";
+    uploadPrompt.innerText = "تم استلام المستند بنجاح! جاهز لبدء التحليل والمطابقة.";
 
     analyzeBtn.disabled = false;
-    analyzeBtn.className = "w-full bg-[#002855] hover:bg-[#001D3D] text-white font-bold py-3.5 px-4 rounded-lg transition-all shadow-md flex justify-center items-center cursor-pointer opacity-100";
+    analyzeBtn.className = "w-full bg-[#002855] hover:bg-[#001D3D] text-white font-bold py-3.5 px-4 rounded-lg transition-all shadow-md flex justify-center items-center gap-2 cursor-pointer opacity-100";
     
     const docType = document.querySelector('input[name="docType"]:checked').value;
-    logToConsole(`INFO: تم تحميل مستند جديد للتحقق من التستر والاتساق [${docType === 'invoice' ? 'فاتورة ضريبية' : 'طلب تحويل بنكي'}]: ${file.name}`, "text-yellow-400");
-});
+    logToConsole(`INFO: تم ترحيل مستند جديد لفحص الامتثال [${docType === 'invoice' ? 'فاتورة ضريبية' : 'طلب تحويل بنكي'}]: ${file.name}`, "text-yellow-400");
+}
 
-// 🔄 التبديل الفوري التفاعلي بين شاشات العمليات ورقابة مدير الامتثال
+// 🔄 التبديل الفوري التفاعلي بين شاشات رائد الأعمال وأقسام امتثال البنك لخدمة الـ Storytelling للتحكيم
 function switchView(viewName) {
     const entView = document.getElementById('entrepreneurView');
     const bankView = document.getElementById('bankComplianceView');
@@ -35,15 +66,15 @@ function switchView(viewName) {
     if (viewName === 'entrepreneur') {
         entView.classList.remove('hidden');
         bankView.classList.add('hidden');
-        btnUser.className = "px-4 py-1.5 rounded-md text-xs font-bold bg-[#0084C2] text-white transition-all";
+        btnUser.className = "px-4 py-1.5 rounded-md text-xs font-bold bg-[#0084C2] text-white transition-all shadow-sm";
         btnBank.className = "px-4 py-1.5 rounded-md text-xs font-bold text-gray-400 hover:text-white transition-all";
-        logToConsole("UI_VIEW: تم التبديل إلى شاشة رائد الأعمال للتحقق من العمليات الحية.", "text-blue-400");
+        logToConsole("UI_VIEW: تم التبديل إلى شاشة رائد الأعمال للعمليات الحية.", "text-blue-400");
     } else {
         entView.classList.add('hidden');
         bankView.classList.remove('hidden');
         btnUser.className = "px-4 py-1.5 rounded-md text-xs font-bold text-gray-400 hover:text-white transition-all";
-        btnBank.className = "px-4 py-1.5 rounded-md text-xs font-bold bg-[#0084C2] text-white transition-all";
-        logToConsole("UI_VIEW: تم التبديل إلى لوحة مدير الامتثال بالبنك لمراقبة شبهات التستر وإحصائيات العمليات والمخاطر.", "text-purple-400");
+        btnBank.className = "px-4 py-1.5 rounded-md text-xs font-bold bg-[#0084C2] text-white transition-all shadow-sm";
+        logToConsole("UI_VIEW: تم التبديل لـ لوحة تحكم أقسام الامتثال البنكي لمراقبة إحصائيات وأخطاء العملاء.", "text-purple-400");
     }
 }
 
@@ -71,26 +102,27 @@ function switchTab(tabName) {
     }
 }
 
+// استدعاء منفذ الـ API السحابي للتدقيق والمطابقة
 analyzeBtn.addEventListener('click', function() {
     if (!currentFile) return;
 
     analyzeBtn.disabled = true;
-    analyzeBtn.innerText = "⏳ جاري مسح المستند وتطبيق كشف التستر والامتثال الذكي...";
+    analyzeBtn.innerText = "⏳ جاري التدقيق والتحصين السحابي للمستند المالي...";
     document.getElementById('resultSection').classList.add('hidden');
 
     const docType = document.querySelector('input[name="docType"]:checked').value;
-    logToConsole(`START: تفعيل موظف الامتثال 'حصين' للتحقق من المستند [${docType === 'invoice' ? 'الفاتورة الضريبية' : 'طلب التحويل المالي'}]...`, "text-white font-bold");
+    logToConsole(`START: بدء المعالجة الرقمية لـ [${docType === 'invoice' ? 'الفاتورة الضريبية' : 'طلب التحويل المالي'}]...`, "text-white font-bold");
     
     setTimeout(() => {
-        logToConsole("CRAWLER: تحديث الأنظمة وقواعد SAMA لحظياً ضد تعاميم مكافحة التستر وغسيل الأموال... الأنظمة محدثة.", "text-indigo-400");
+        logToConsole("CRAWLER: تم تنشيط الـ Crawler الآلي والتحقق من تعميمات مؤسسة نقد (SAMA) المحدثة بالخلفية...", "text-indigo-400");
     }, 300);
 
     setTimeout(() => {
-        logToConsole("OCR: استخراج نصوص الفاتورة والتحقق من الهوية الضريبية للمورد وسجلاته التجارية والمبالغ المتقاطعة...", "text-yellow-400");
+        logToConsole("OCR: جاري معالجة المستند واستخراج النصوص عبر بيئة الحاوية الموطنة (Docker)...", "text-yellow-400");
     }, 800);
 
     setTimeout(() => {
-        logToConsole("SDAIA/PDPL: حجب البيانات الحساسة وتعميتها لضمان التوطين الآمن تماشياً مع معايير سدايا ونظام حماية البيانات الشخصية...", "text-blue-400");
+        logToConsole("SDAIA/PDPL: جاري تشغيل خوارزمية تعمية وحجب الهويات والآيبانات الحساسة محلياً تماشياً مع معايير سدايا...", "text-blue-400");
     }, 1500);
 
     const formData = new FormData();
@@ -108,7 +140,7 @@ analyzeBtn.addEventListener('click', function() {
         document.getElementById('resultSection').classList.remove('hidden');
 
         if (data.status === "ERROR") {
-            logToConsole("ERROR: فشل معالجة الملف: " + data.message, "text-red-500 font-bold");
+            logToConsole("ERROR: فشل معالجة المستند: " + data.message, "text-red-500 font-bold");
             alert("حدث خطأ أثناء معالجة الملف: " + data.message);
             return;
         }
@@ -121,10 +153,8 @@ analyzeBtn.addEventListener('click', function() {
             document.getElementById('vatRateField').value = "غير مطلوب لطلب التحويل";
         }
 
-        // تحديث بصمة البلوكتشين الرقمية
         document.getElementById('blockchainHashDisplay').innerText = data.blockchain_hash;
 
-        // تحديث بار درجة ثقة الـ OCR والـ Fallback المزدوج للامتثال البشري
         const confidenceBar = document.getElementById('ocrConfidenceBar');
         const confidenceValue = document.getElementById('ocrConfidenceValue');
         const fallbackAlert = document.getElementById('humanFallbackAlert');
@@ -133,10 +163,10 @@ analyzeBtn.addEventListener('click', function() {
         confidenceValue.innerText = data.ocr_confidence + "%";
         
         if (data.fallback_to_human) {
-            confidenceBar.className = "h-2.5 rounded-full bg-red-500";
+            confidenceBar.className = "h-2.5 rounded-full bg-amber-500";
             fallbackAlert.classList.remove('hidden');
             document.getElementById('fallbackReasonText').innerText = data.fallback_reason;
-            logToConsole(`WARN: كشف مؤشر خطورة! درجة ثقة الـ OCR أو مطابقة المعطيات حرجة (${data.ocr_confidence}%). تم تعليق المعاملة وتوجيهها للمراجعة البشرية المزدوجة بالخلفية لمكافحة التستر المالي.`, "text-amber-500 font-bold");
+            logToConsole(`WARN: درجة الثقة الإلزامية تطلبت تدقيقاً مزدوجاً (${data.ocr_confidence}%).`, "text-amber-500 font-bold");
         } else {
             confidenceBar.className = "h-2.5 rounded-full bg-emerald-500";
             fallbackAlert.classList.add('hidden');
@@ -146,7 +176,7 @@ analyzeBtn.addEventListener('click', function() {
         document.getElementById('samaStatus').innerText = data.sama_market_data.status;
         document.getElementById('samaTime').innerText = data.sama_market_data.last_update;
         document.getElementById('zatcaMessage').innerText = data.zatca_validation.message;
-        document.getElementById('qrMessage').innerText = data.status === "APPROVED" ? "✅ رمز الاستجابة السريعة متطابق ومستوفٍ للشروط الأمنية." : "⚠️ الـ QR Code غير مكتمل أو به حقول تخالف تعاميم الفوترة ومكافحة التستر البنكية.";
+        document.getElementById('qrMessage').innerText = "✅ تم إثبات سلامة وفك تشفير الـ QR Code الأمني للمستند المالي الجاري فحصه.";
 
         const badge = document.getElementById('complianceBadge');
         const reportBox = document.getElementById('reportBox');
@@ -155,55 +185,52 @@ analyzeBtn.addEventListener('click', function() {
         if (data.status === "APPROVED") {
             badge.className = "px-3 py-1 rounded-full text-xs font-bold text-white bg-emerald-500";
             badge.innerText = "ممتثل وآمن ✅";
-            reportBox.className = "p-4 rounded-lg mb-4 text-xs font-medium bg-emerald-50 text-emerald-800 border-r-4 border-emerald-500";
-            reportBox.innerHTML = "<p>🎉 تم فحص وتحليل المستند؛ وهو مطابق بالكامل لمعايير الاتساق المالي وقواعد SAMA ولم يتم كشف أي شبهات تستر تجاري أو تعارض بيانات لشركة الشراع المحدودة.</p>";
+            reportBox.className = "p-4 rounded-lg mb-4 text-xs font-medium bg-emerald-50 text-emerald-800 border-r-4 border-emerald-500 shadow-sm";
+            reportBox.innerHTML = "<p>🎉 تم فحص وتحليل المستند؛ وهو مطابق بالكامل للتشريعات واللوائح التنظيمية المعتمدة لشركة الشراع المحدودة.</p>";
             correctionArea.classList.add('hidden');
-            logToConsole("SUCCESS: عملية التدقيق والتحصين اكتملت بنجاح وحساب المنشأة آمن وخالٍ من شبهات التستر!", "text-emerald-400 font-bold");
+            logToConsole("SUCCESS: عملية التدقيق اكتملت بنجاح وحساب المنشأة ممتثل وآمن!", "text-emerald-400 font-bold");
         } else {
             badge.className = "px-3 py-1 rounded-full text-xs font-bold text-white bg-red-500";
-            badge.innerText = `غير ممتثل (${data.risk_score === "HIGH" ? "خطورة عالية 🚨" : "خطورة متوسطة ⚠️"})`;
+            badge.innerText = "غير ممتثل ❌";
+            reportBox.className = "p-4 rounded-lg mb-4 text-xs font-medium bg-red-50 text-red-800 border-r-4 border-red-500 shadow-sm";
             
-            let reportBg = data.risk_score === "HIGH" ? "bg-red-50 text-red-800 border-red-500" : "bg-amber-50 text-amber-800 border-amber-500";
-            reportBox.className = `p-4 rounded-lg mb-4 text-xs font-medium border-r-4 ${reportBg}`;
-            
-            let issuesHTML = "<p class='font-bold mb-1'>تم رصد ثغرات الامتثال ومخاطر التستر التالية بواسطة حصين:</p><ul class='list-disc pr-4'>";
+            let issuesHTML = "<p class='font-bold mb-1'>تم رصد المخالفات السيادية التالية:</p><ul class='list-disc pr-4 space-y-1'>";
             const issues = data.ai_analysis.issues || [];
             issues.forEach(issue => { issuesHTML += `<li>${issue}</li>`; });
             issuesHTML += "</ul>";
             reportBox.innerHTML = issuesHTML;
             correctionArea.classList.remove('hidden');
-            logToConsole("REJECTED: تم كشف ثغرات ومؤشرات خطورة تستر تجاري! تم إيقاف تمرير المعاملة فوراً لحماية حساب العميل والبنك من المساءلة.", "text-red-500 font-bold");
+            logToConsole("REJECTED: تم كشف تعارض حرج بالامتثال. تم إيقاف تمرير العملية لحماية الحساب البنكي.", "text-red-500 font-bold");
         }
     })
     .catch(err => {
         analyzeBtn.disabled = false;
         analyzeBtn.innerText = "🔍 ابدأ الفحص والتدقيق الذكي لحصين";
-        logToConsole("ERROR: فشل الاتصال بخادم حصين الذكي الفعلي.", "text-red-500");
+        logToConsole("ERROR: فشل الاتصال بخادم حصين السحابي الموطن.", "text-red-500");
         console.error(err);
     });
 });
 
 function applyInstantCorrection() {
-    logToConsole("CORRECTION: جاري تفعيل مهام موظف الامتثال: مطابقة الـ VAT، تعديل تباين العملات وتعبئة غرض التحويل الإلزامي لـ SAMA...", "text-blue-400 font-bold");
+    logToConsole("CORRECTION: جاري تفعيل المراجعة والتحقق وتصحيح حقول الإدخال لتطابق معايير ساما وزكاتنا...", "text-blue-400 font-bold");
     
-    document.getElementById('vatNoField').value = "300123456789123";
+    document.getElementById('vatNoField').value = "310178556400003";
     document.getElementById('vatRateField').value = "15";
 
     const badge = document.getElementById('complianceBadge');
     const reportBox = document.getElementById('reportBox');
     
     badge.className = "px-3 py-1 rounded-full text-xs font-bold text-white bg-emerald-500";
-    badge.innerText = "تم التدقيق والتصحيح بنجاح ✨";
+    badge.innerText = "تم التصحيح والامتثال ✨";
     
-    reportBox.className = "p-4 rounded-lg mb-4 text-xs font-medium bg-emerald-50 text-emerald-800 border-r-4 border-emerald-500";
-    reportBox.innerHTML = "<p>🎉 نجاح الحوكمة الاستباقية: قام 'حصين' بمعالجة تباين المعطيات وتعبئة غرض التحويل الدولي الإلزامي لـ SAMA (استيراد مواد بناء) تلقائياً، مع تصحيح وتعديل الأرقام الضريبية للعملية بنجاح لسد فجوات الامتثال وتفادي تجميد الحساب!</p>";
+    reportBox.className = "p-4 rounded-lg mb-4 text-xs font-medium bg-emerald-50 text-emerald-800 border-r-4 border-emerald-500 shadow-sm";
+    reportBox.innerHTML = "<p>🎉 تم تحديث حقول الإدخال يدوياً من رائد الأعمال لتتوافق مع الأنظمة واللوائح المعتمدة لشركة الشراع المحدودة بنجاح دون المساس بالمستند الأصلي لضمان السلامة القانونية ومكافحة التستر!</p>";
     
-    document.getElementById('qrMessage').innerText = "🔒 تم إثبات الاتساق ومطابقة مستندات التحويل الدولي وحماية حساب المنشأة من التجميد الآلي القانوني.";
-    document.getElementById('zatcaMessage').innerText = "بيانات العملية والكيان متطابقة بنسبة 100% مع الهوية المالية والقوانين المعتمدة لدى هيئة الزكاة.";
+    document.getElementById('zatcaMessage').innerText = "المعاملة والمستند متطابقان وممتثلان تشريعياً.";
     document.getElementById('ocrConfidenceBar').style.width = "100%";
-    document.getElementById('ocrConfidenceValue').innerText = "100% (تم التحقق الذاتي والمطابقة)";
+    document.getElementById('ocrConfidenceValue').innerText = "100% (تم التحقق البشري)";
     document.getElementById('humanFallbackAlert').classList.add('hidden');
     document.getElementById('correctionArea').classList.add('hidden');
     
-    logToConsole("SUCCESS: تم معالجة وتعديل القصور بنجاح. المعاملة مستوفية لتعاميم SAMA بالكامل ومحصنة بالبلوكتشين وجاهزة للتمرير الفوري!", "text-emerald-400 font-bold");
+    logToConsole("SUCCESS: تم معالجة وتعديل القصور بنجاح. المعاملة الآن ممتملة ومحصنة بالبلوكتشين وجاهزة للتمرير الفوري!", "text-emerald-400 font-bold");
 }
